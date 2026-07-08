@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BUAD 683 &middot; Week 2 &middot; Value Creation &amp; Strategic Information Systems</title>
+<style>
+  :root{
+    --maroon:#570c0f;
+    --maroon-dark:#3d0809;
+    --maroon-deep:#2e0608;
+    --gold:#c8a84b;
+    --gold-light:#e3cf94;
+    --cream:#f5edd5;
+    --cream-light:#faf6ec;
+    --paper:#fffdf8;
+    --ink:#1a1a1a;
+    --slate:#64748b;
+    --rule:#d8cfc0;
+
+    --tip-color:#a9821f; --tip-bg:#f5edd5; --tip-border:#c8a84b;
+    --note-color:#2c4d9e; --note-bg:#eef4fb; --note-border:#4472c4;
+    --pause-color:#2e7d32; --pause-bg:#f0f8f0; --pause-border:#2e7d32;
+    --correct-color:#1e6b2e; --correct-bg:#eaf6ec; --correct-border:#2e7d32;
+    --incorrect-color:#a32626; --incorrect-bg:#fcecec; --incorrect-border:#c0392b;
+
+    --display: "Cambria","Georgia",serif;
+    --body: "Calibri","Segoe UI",Arial,sans-serif;
+
+    --max-w: 920px;
+    --sidebar-w: 296px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:var(--body);
+    color:var(--ink);
+    background:var(--paper);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;}
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:50;
+    background:var(--maroon);
+    color:#fff;
+    border-bottom:3px solid var(--gold);
+  }
+  .topbar-inner{
+    max-width:1280px; margin:0 auto;
+    display:flex; align-items:center; gap:14px;
+    padding:10px 24px;
+  }
+  .topbar .crest{
+    width:34px; height:34px; border-radius:50%;
+    background:#fff; display:flex; align-items:center; justify-content:center;
+    font-family:var(--display); font-weight:700; color:var(--maroon); font-size:15px;
+    flex:0 0 auto;
+  }
+  .topbar .course-id{
+    font-weight:700; letter-spacing:.04em; font-size:13px; color:var(--gold-light);
+    text-transform:uppercase;
+  }
+  .topbar .course-title{
+    font-family:var(--display); font-size:16px; color:#fff; margin-left:2px;
+  }
+  .topbar .sep{ color:var(--gold); opacity:.7; padding:0 2px;}
+  .progress-track{
+    height:5px; background:rgba(255,255,255,.18);
+  }
+  .progress-fill{
+    height:100%; width:0%; background:linear-gradient(90deg,var(--gold),#e6d4a0);
+    transition:width .25s ease;
+  }
+
+  /* ---------- Layout ---------- */
+  .layout{
+    max-width:1280px; margin:0 auto;
+    display:flex; align-items:flex-start; gap:0;
+  }
+
+  .sidebar{
+    width:var(--sidebar-w); flex:0 0 auto;
+    position:sticky; top:53px;
+    height:calc(100vh - 53px);
+    overflow-y:auto;
+    padding:28px 18px 40px;
+    border-right:1px solid var(--rule);
+    background:var(--cream-light);
+  }
+  .sidebar h4{
+    font-family:var(--body); font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--slate); font-weight:700; margin:0 0 14px 6px;
+  }
+  .nav-list{list-style:none; margin:0; padding:0;}
+  .nav-list li{margin-bottom:4px;}
+  .nav-link{
+    display:flex; align-items:center; gap:10px;
+    padding:9px 10px; border-radius:8px;
+    text-decoration:none; color:var(--ink); font-size:14px;
+    border:1px solid transparent;
+  }
+  .nav-link:hover{ background:var(--cream); }
+  .nav-link.active{
+    background:var(--maroon); color:#fff; border-color:var(--maroon-dark);
+    font-weight:600;
+  }
+  .nav-num{
+    width:22px;height:22px;border-radius:50%;
+    background:var(--cream); color:var(--maroon);
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px; font-weight:700; flex:0 0 auto;
+    border:1px solid var(--gold);
+  }
+  .nav-link.active .nav-num{ background:var(--gold); color:var(--maroon-dark); border-color:var(--gold);}
+  .sidebar-progress{
+    margin-top:22px; padding-top:16px; border-top:1px solid var(--rule);
+    font-size:12px; color:var(--slate);
+  }
+  .sidebar-progress .bar{
+    height:7px;border-radius:5px;background:var(--cream);
+    overflow:hidden; margin-top:6px; border:1px solid var(--rule);
+  }
+  .sidebar-progress .bar-fill{
+    height:100%; width:0%; background:var(--maroon); transition:width .25s ease;
+  }
+
+  main{
+    flex:1 1 auto; min-width:0;
+    padding:0 0 80px;
+  }
+
+  /* ---------- Hero / welcome ---------- */
+  .hero{
+    background:
+      radial-gradient(1100px 320px at 15% -10%, rgba(200,168,75,.18), transparent 60%),
+      linear-gradient(180deg,var(--maroon-dark),var(--maroon) 70%);
+    color:#fff; padding:56px 48px 44px;
+  }
+  .hero .eyebrow{
+    font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--gold-light);
+    font-weight:700; margin-bottom:10px;
+  }
+  .hero h1{
+    font-family:var(--display); font-size:38px; margin:0 0 10px; line-height:1.15;
+  }
+  .hero p.lede{
+    max-width:64ch; color:#f1e8d8; font-size:16px; margin:0 0 22px;
+  }
+  .stat-strip{
+    display:flex; flex-wrap:wrap; gap:10px; margin-top:8px;
+  }
+  .stat-pill{
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.22);
+    border-radius:999px; padding:7px 16px; font-size:13px; color:#f6efe0;
+  }
+
+  .content-pad{ padding:40px 48px; }
+
+  .card{
+    background:#fff; border:1px solid var(--rule); border-radius:14px;
+    padding:24px 26px; margin:18px 0;
+    box-shadow:0 1px 3px rgba(0,0,0,.04);
+  }
+  .card h3{ margin-top:0; }
+
+  .learn-list{ list-style:none; margin:14px 0; padding:0; }
+  .learn-list li{
+    display:flex; gap:10px; align-items:flex-start;
+    padding:8px 0; font-size:15px;
+  }
+  .learn-list li .diamond{ color:var(--maroon); flex:0 0 auto; margin-top:3px; font-size:11px;}
+
+  .stat-cards{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:22px 0 6px;
+  }
+  .stat-card{
+    background:var(--cream-light); border:1px solid var(--rule); border-radius:12px;
+    padding:18px 14px; text-align:center;
+  }
+  .stat-card .num{ font-family:var(--display); font-size:30px; color:var(--maroon); font-weight:700;}
+  .stat-card .lbl{ font-size:12.5px; color:var(--slate); margin-top:4px;}
+
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--maroon); color:#fff; border:none; border-radius:9px;
+    padding:13px 26px; font-size:15px; font-weight:600; cursor:pointer;
+    text-decoration:none; font-family:var(--body);
+  }
+  .btn:hover{ background:var(--maroon-dark); }
+  .btn.ghost{
+    background:transparent; color:var(--maroon); border:1.5px solid var(--maroon);
+  }
+  .btn.ghost:hover{ background:var(--cream); }
+  .btn[disabled]{opacity:.45; cursor:not-allowed;}
+
+  .btn-row{ display:flex; gap:12px; margin-top:26px; flex-wrap:wrap;}
+
+  /* ---------- Section header ---------- */
+  .section{
+    border-top:1px solid var(--rule);
+    padding:46px 48px 10px;
+    scroll-margin-top:64px;
+  }
+  .section-kicker{
+    font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--gold);
+    font-weight:700; background:var(--maroon); display:inline-block;
+    padding:5px 12px; border-radius:999px; margin-bottom:14px;
+  }
+  .section h2{
+    font-family:var(--display); font-size:30px; color:var(--maroon); margin:0 0 8px;
+  }
+  .section .dek{ color:var(--slate); font-size:15.5px; margin:0 0 26px;}
+
+  /* ---------- Tabs ---------- */
+  .tabs{
+    display:flex; flex-wrap:wrap; gap:6px;
+    border-bottom:2px solid var(--rule); margin-bottom:24px;
+  }
+  .tab-btn{
+    background:none; border:none; cursor:pointer;
+    padding:10px 16px; font-family:var(--body); font-size:14.5px; font-weight:600;
+    color:var(--slate); border-bottom:3px solid transparent; margin-bottom:-2px;
+    border-radius:6px 6px 0 0;
+  }
+  .tab-btn:hover{ color:var(--maroon); background:var(--cream-light);}
+  .tab-btn.active{ color:var(--maroon); border-bottom-color:var(--maroon); }
+  .tab-panel{ display:none; }
+  .tab-panel.active{ display:block; animation:fadein .25s ease; }
+  @keyframes fadein{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
+
+  h3.sub{ font-family:var(--display); color:var(--maroon-dark); font-size:20px; margin:26px 0 10px;}
+  p{ margin:0 0 14px; font-size:15.5px;}
+
+  .formula{
+    display:flex; align-items:center; justify-content:center; flex-wrap:wrap;
+    gap:10px; background:var(--cream-light); border:1px dashed var(--gold);
+    border-radius:12px; padding:20px; margin:18px 0; font-family:var(--display);
+  }
+  .formula .term{
+    background:#fff; border:1px solid var(--rule); border-radius:8px;
+    padding:8px 14px; font-size:16px; color:var(--maroon-dark); font-weight:700;
+  }
+  .formula .op{ font-size:18px; color:var(--slate);}
+
+  /* ---------- Callouts ---------- */
+  .callout{
+    border-radius:10px; padding:16px 18px; margin:18px 0;
+    border:1px solid; font-size:14.5px;
+  }
+  .callout b.tag{ display:block; font-size:12.5px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:5px;}
+  .callout.tip{ background:var(--tip-bg); border-color:var(--tip-border); color:var(--ink);}
+  .callout.tip b.tag{ color:var(--tip-color);}
+  .callout.note{ background:var(--note-bg); border-color:var(--note-border); color:var(--ink);}
+  .callout.note b.tag{ color:var(--note-color);}
+  .callout.warn{ background:#fdf3e3; border-color:#c98a1f; color:var(--ink);}
+  .callout.warn b.tag{ color:#a3680f;}
+  .callout.key{ background:var(--cream-light); border-color:var(--gold); color:var(--ink);}
+  .callout.key b.tag{ color:var(--maroon);}
+
+  /* ---------- Card grids ---------- */
+  .grid{ display:grid; gap:14px; margin:20px 0; }
+  .grid.cols-2{ grid-template-columns:1fr 1fr; }
+  .grid.cols-3{ grid-template-columns:repeat(3,1fr); }
+  .grid.cols-4{ grid-template-columns:repeat(4,1fr); }
+
+  .icon-card{
+    background:#fff; border:1px solid var(--rule); border-radius:12px; padding:18px;
+  }
+  .icon-card .ic{ font-size:24px; margin-bottom:8px; }
+  .icon-card h4{ margin:0 0 2px; font-family:var(--display); color:var(--maroon-dark); font-size:16px;}
+  .icon-card .tagline{ font-size:12px; color:var(--gold); font-weight:700; text-transform:uppercase; letter-spacing:.03em; margin-bottom:8px;}
+  .icon-card p{ font-size:13.8px; margin:0; color:#333;}
+
+  /* ---------- Tables ---------- */
+  table.data{ width:100%; border-collapse:collapse; margin:18px 0; font-size:14px; }
+  table.data th, table.data td{
+    border:1px solid var(--rule); padding:10px 12px; text-align:left; vertical-align:top;
+  }
+  table.data th{ background:var(--maroon); color:#fff; font-family:var(--body); font-weight:700;}
+  table.data tr:nth-child(even) td{ background:var(--cream-light); }
+
+  /* ---------- Knowledge check ---------- */
+  .kc{
+    background:var(--cream-light); border:1px solid var(--gold);
+    border-radius:14px; padding:24px 26px; margin:26px 0;
+  }
+  .kc .kc-label{
+    display:inline-block; background:var(--maroon); color:#fff; font-size:11.5px;
+    font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+    padding:4px 12px; border-radius:999px; margin-bottom:12px;
+  }
+  .kc .q{ font-weight:700; font-size:16px; margin-bottom:14px; }
+  .kc-options{ display:flex; flex-direction:column; gap:8px; }
+  .kc-opt{
+    text-align:left; background:#fff; border:1.5px solid var(--rule); border-radius:9px;
+    padding:11px 14px; font-size:14.5px; cursor:pointer; font-family:var(--body);
+  }
+  .kc-opt:hover{ border-color:var(--maroon); }
+  .kc-opt.selected-correct{ border-color:var(--correct-border); background:var(--correct-bg); }
+  .kc-opt.selected-incorrect{ border-color:var(--incorrect-border); background:var(--incorrect-bg); }
+  .kc-opt[disabled]{ cursor:default; }
+  .kc-feedback{ margin-top:14px; padding:14px 16px; border-radius:9px; font-size:14.5px; display:none; }
+  .kc-feedback.show{ display:block; animation:fadein .25s ease; }
+  .kc-feedback.correct{ background:var(--correct-bg); border:1px solid var(--correct-border); color:var(--correct-color); }
+  .kc-feedback.incorrect{ background:var(--incorrect-bg); border:1px solid var(--incorrect-border); color:var(--incorrect-color); }
+  .kc-retry{
+    margin-top:10px; background:none; border:none; color:var(--maroon); font-weight:700;
+    text-decoration:underline; cursor:pointer; font-size:13.5px; padding:0; display:none;
+  }
+  .kc-retry.show{ display:inline-block; }
+
+  /* ---------- Tools ---------- */
+  .tool{
+    background:#fff; border:2px solid var(--maroon); border-radius:14px;
+    padding:24px 26px; margin:22px 0;
+  }
+  .tool h4{
+    font-family:var(--display); color:var(--maroon); font-size:18px; margin:0 0 4px;
+  }
+  .tool .tool-sub{ color:var(--slate); font-size:13.5px; margin-bottom:18px; }
+  .slider-row{ margin-bottom:18px; }
+  .slider-row label{
+    display:flex; justify-content:space-between; font-size:14px; font-weight:600; margin-bottom:6px;
+  }
+  .slider-row label span.val{ color:var(--maroon); font-family:var(--display); }
+  input[type=range]{
+    width:100%; accent-color:var(--maroon); height:6px;
+  }
+  .tool-output{
+    display:flex; gap:14px; flex-wrap:wrap; margin-top:18px;
+  }
+  .tool-output .out-card{
+    flex:1; min-width:140px; background:var(--cream-light); border:1px solid var(--rule);
+    border-radius:10px; padding:14px 16px; text-align:center;
+  }
+  .tool-output .out-card .out-num{ font-family:var(--display); font-size:22px; color:var(--maroon); font-weight:700;}
+  .tool-output .out-card .out-lbl{ font-size:11.5px; color:var(--slate); margin-top:3px;}
+  .tool-note{ font-size:12px; color:var(--slate); margin-top:14px; }
+
+  .pill-group{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
+  .pill-btn{
+    border:1.5px solid var(--rule); background:#fff; border-radius:999px;
+    padding:8px 16px; font-size:13.5px; cursor:pointer; font-family:var(--body); font-weight:600;
+  }
+  .pill-btn.active{ background:var(--maroon); border-color:var(--maroon); color:#fff; }
+  .explorer-panel{
+    background:var(--cream-light); border:1px solid var(--rule); border-radius:10px; padding:18px 20px;
+  }
+  .explorer-panel .ep-row{ margin-bottom:10px; font-size:14.5px;}
+  .explorer-panel .ep-row b{ color:var(--maroon-dark); }
+
+  .matrix-builder-row{ display:flex; gap:28px; flex-wrap:wrap; margin-bottom:18px;}
+  .matrix-builder-col{ flex:1; min-width:220px; }
+  .matrix-builder-col h5{ font-size:12.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--slate); margin:0 0 10px;}
+  .mb-output{
+    background:var(--cream-light); border:1px solid var(--gold); border-radius:10px;
+    padding:18px 20px; font-size:15px; min-height:60px; display:flex; align-items:center;
+  }
+
+  /* ---------- Synthesis principles ---------- */
+  .principle{
+    display:flex; gap:18px; padding:18px 0; border-bottom:1px solid var(--rule);
+  }
+  .principle:last-child{ border-bottom:none; }
+  .principle .pnum{
+    font-family:var(--display); font-size:34px; color:var(--gold); font-weight:700;
+    flex:0 0 56px;
+  }
+  .principle h4{ margin:0 0 4px; font-family:var(--display); color:var(--maroon-dark); font-size:17px;}
+  .principle p{ margin:0; font-size:14.5px; }
+
+  .assess-row{
+    display:flex; justify-content:space-between; align-items:center; gap:14px;
+    padding:10px 0; border-bottom:1px solid var(--rule); font-size:14px;
+  }
+  .assess-row:last-of-type{ border-bottom:none; }
+  .assess-row .a-label{ flex:0 0 230px; font-weight:600; }
+  .assess-row input[type=range]{ flex:1; }
+  .assess-row .a-val{ width:24px; text-align:right; font-family:var(--display); color:var(--maroon); font-weight:700;}
+  .assess-result{
+    margin-top:18px; padding:16px 18px; border-radius:10px; background:var(--cream-light);
+    border:1px solid var(--gold); font-size:14.5px; text-align:center; font-weight:600; color:var(--maroon-dark);
+  }
+
+  .assignment-box{
+    background:var(--maroon-dark); color:#fff; border-radius:14px; padding:26px 28px; margin:22px 0;
+  }
+  .assignment-box h4{ font-family:var(--display); color:var(--gold-light); margin:0 0 12px; font-size:18px;}
+  .assignment-box .prompt{
+    background:rgba(255,255,255,.08); border-radius:10px; padding:16px 18px; margin-bottom:16px; font-style:italic;
+  }
+  .assignment-box ul{ margin:0; padding-left:20px; font-size:14px; }
+  .assignment-box li{ margin-bottom:6px; }
+
+  .footer-nav{
+    display:flex; justify-content:space-between; align-items:center; margin-top:36px;
+    padding-top:24px; border-top:1px solid var(--rule);
+  }
+
+  .module-end{
+    text-align:center; padding:50px 48px 70px;
+  }
+  .module-end h2{ font-family:var(--display); color:var(--maroon); font-size:28px;}
+
+  @media (max-width: 880px){
+    .sidebar{ display:none; }
+    .content-pad, .section{ padding-left:24px; padding-right:24px; }
+    .hero{ padding:40px 24px 32px; }
+    .stat-cards{ grid-template-columns:repeat(2,1fr); }
+    .grid.cols-2, .grid.cols-3, .grid.cols-4{ grid-template-columns:1fr; }
+    .matrix-builder-row{ flex-direction:column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="crest">UR</div>
+    <div class="course-id">BUAD 683</div>
+    <span class="sep">&middot;</span>
+    <div class="course-title">Value Creation &amp; Strategic Information Systems</div>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="topProgress"></div></div>
+</div>
+
+<div class="layout">
+  <nav class="sidebar" aria-label="Module navigation">
+    <h4>Week 2 &middot; Session Modules</h4>
+    <ul class="nav-list" id="navList">
+      <li><a class="nav-link" data-target="welcome" href="#welcome"><span class="nav-num">1</span> Welcome &amp; Learning Outcomes</a></li>
+      <li><a class="nav-link" data-target="s1" href="#s1"><span class="nav-num">2</span> What Creates Value?</a></li>
+      <li><a class="nav-link" data-target="s2" href="#s2"><span class="nav-num">3</span> Two Ways to Create New Value</a></li>
+      <li><a class="nav-link" data-target="s3" href="#s3"><span class="nav-num">4</span> Strategic vs. Tactical IS</a></li>
+      <li><a class="nav-link" data-target="s4" href="#s4"><span class="nav-num">5</span> Five Forces &mdash; A Digital Lens</a></li>
+      <li><a class="nav-link" data-target="s5" href="#s5"><span class="nav-num">6</span> Value Chain, Network &amp; CSLC</a></li>
+      <li><a class="nav-link" data-target="s6" href="#s6"><span class="nav-num">7</span> Virtual Value Chain &amp; Matrix</a></li>
+      <li><a class="nav-link" data-target="s7" href="#s7"><span class="nav-num">8</span> Synthesis &amp; Takeaways</a></li>
+    </ul>
+    <div class="sidebar-progress">
+      Module Progress <span id="sideProgressPct">0%</span>
+      <div class="bar"><div class="bar-fill" id="sideProgressFill"></div></div>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- ===================== WELCOME ===================== -->
+    <section class="hero" id="welcome">
+      <div class="eyebrow">Week 2 &middot; Session Modules</div>
+      <h1>Value Creation &amp; Strategic Information Systems</h1>
+      <p class="lede">This asynchronous module covers how managers analyze value creation &mdash; what creates it, how added value differs from it, which information systems are genuinely strategic, and the frameworks managers use to find where IT creates the most value.</p>
+      <div class="stat-strip">
+        <div class="stat-pill">&#128218; 7 Sections</div>
+        <div class="stat-pill">&#9201; ~70 min</div>
+        <div class="stat-pill">&#127919; 6 Knowledge Checks</div>
+        <div class="stat-pill">&#128736; 3 Interactive Tools</div>
+      </div>
+    </section>
+
+    <div class="content-pad">
+      <h3 class="sub" style="margin-top:0;">What You'll Learn</h3>
+      <p>By the end of this module, you will be able to:</p>
+      <ul class="learn-list">
+        <li><span class="diamond">&#9670;</span> Define value creation and added value &mdash; and explain why the distinction changes what an IS investment is actually worth</li>
+        <li><span class="diamond">&#9670;</span> Identify the two levers managers use to create new value: increasing customer willingness to pay and decreasing supplier opportunity cost</li>
+        <li><span class="diamond">&#9670;</span> Distinguish strategic information systems from tactical ones using the correct test &mdash; not a feature list</li>
+        <li><span class="diamond">&#9670;</span> Apply Porter's five forces framework through an IT lens to find where technology shifts competitive advantage</li>
+        <li><span class="diamond">&#9670;</span> Use the value chain, value network, and CSLC frameworks to locate where value is created, exchanged, and delivered</li>
+        <li><span class="diamond">&#9670;</span> Apply the virtual value chain and the value matrix to identify IT-dependent strategic initiatives worth pursuing</li>
+      </ul>
+
+      <div class="callout key">
+        <b class="tag">&#128273; Manager-first lens</b>
+        Every concept in this module is filtered through one question: could this create added value your organization could actually <em>keep</em> &mdash; not just value that any competitor could replicate? Value creation is necessary. It is never sufficient.
+      </div>
+
+      <div class="stat-cards">
+        <div class="stat-card"><div class="num">2</div><div class="lbl">Value-Creation Levers</div></div>
+        <div class="stat-card"><div class="num">3</div><div class="lbl">Strategic IS Tests</div></div>
+        <div class="stat-card"><div class="num">5</div><div class="lbl">Forces, Digital Lens</div></div>
+        <div class="stat-card"><div class="num">5</div><div class="lbl">Virtual Value Chain Steps</div></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn ghost" disabled>&larr; Previous</button>
+        <a class="btn" href="#s1">Start Module &rarr;</a>
+      </div>
+    </div>
+
+    <!-- ===================== SECTION 1 ===================== -->
+    <section class="section" id="s1">
+      <div class="section-kicker">Section 1 of 7</div>
+      <h2>What Creates Value?</h2>
+      <p class="dek">Pinning down a definition precise enough to evaluate a real investment decision</p>
+
+      <div class="tabs" data-group="s1tabs">
+        <button class="tab-btn active" data-tab="s1-def">Value Creation</button>
+        <button class="tab-btn" data-tab="s1-added">Added Value</button>
+        <button class="tab-btn" data-tab="s1-cake">The Cake Example</button>
+        <button class="tab-btn" data-tab="s1-kc">Knowledge Check</button>
+      </div>
+
+      <div class="tab-panel active" data-panel="s1-def">
+        <p>Most managers can describe what their organization sells. Far fewer can describe, precisely, <em>when</em> their organization is creating value &mdash; and that gap costs real money.</p>
+        <h3 class="sub">The Working Definition</h3>
+        <div class="formula">
+          <div class="term">Inputs ($x)</div><div class="op">&rarr; transform &rarr;</div>
+          <div class="term">Outputs ($x + $v)</div><div class="op">=</div>
+          <div class="term">Value Created ($v)</div>
+        </div>
+        <p>Economic value is generated when worthwhile things that did not exist before are created. When inputs worth $x are transformed into outputs that customers are willing to pay $x plus $v for, value of $v has been created.</p>
+        <p>That $v is the whole game. It's not revenue. It's not profit. It's the gap between what went in and what the market will pay for what came out.</p>
+        <div class="callout tip">
+          <b class="tag">&#128188; Manager implication</b>
+          When you evaluate any new initiative, ask: what is the $v, and who decided it's worth that much? If you can't answer both halves, you don't have a value-creation story &mdash; you have an activity.
+        </div>
+      </div>
+
+      <div class="tab-panel" data-panel="s1-added">
+        <p>Value creation answers &ldquo;how much value exists.&rdquo; Added value answers a sharper question: how much of that value would disappear if your firm weren't in the picture?</p>
+        <h3 class="sub">The Definition</h3>
+        <p>A firm's <strong>added value</strong> is the portion of total value created that would be lost if the firm did not take part in the exchange. It depends heavily on the effects of existing competition.</p>
+        <table class="data">
+          <tr><th></th><th>Value Creation</th><th>Added Value</th></tr>
+          <tr><td><strong>Asks</strong></td><td>How much value exists in this exchange?</td><td>How much of it would vanish without this firm?</td></tr>
+          <tr><td><strong>Depends on</strong></td><td>The transformation itself</td><td>Competition &amp; substitutability</td></tr>
+          <tr><td><strong>Can be zero when</strong></td><td>No real transformation occurs</td><td>Any rival could create the same outcome</td></tr>
+        </table>
+        <div class="callout warn">
+          <b class="tag">&#9888; The competition trap</b>
+          High value creation does not guarantee high added value. If ten competitors could create the same value, your added value approaches zero &mdash; even while value creation stays exactly the same.
+        </div>
+      </div>
+
+      <div class="tab-panel" data-panel="s1-cake">
+        <p>This is the example to remember for the rest of the semester &mdash; the specialty cake.</p>
+        <div class="grid cols-2">
+          <div class="icon-card">
+            <div class="ic">&#127856;</div>
+            <h4>You're the only baker</h4>
+            <div class="tagline">added value = $8</div>
+            <p>Raw ingredients are worth $17. Because you're the only one who knows the secret recipe, the finished cake sells for $25. If you decide not to bake it, none of that $8 in new value is realized &mdash; we're left with just $17 in raw resources. All $8 of value created is also your added value.</p>
+          </div>
+          <div class="icon-card">
+            <div class="ic">&#128101;</div>
+            <h4>Ten bakers know the recipe</h4>
+            <div class="tagline">added value &rarr; $0</div>
+            <p>The cake still creates $8 of value &mdash; but your added value collapses, because customers now have options. If you walk away, a competitor simply bakes the cake instead. Nothing is lost.</p>
+          </div>
+        </div>
+        <div class="callout key">
+          <b class="tag">&#128161; Key insight</b>
+          Competition doesn't change the value created. It changes how much of it you can keep.
+        </div>
+      </div>
+
+      <div class="tab-panel" data-panel="s1-kc">
+        <div class="kc">
+          <span class="kc-label">Knowledge Check 1</span>
+          <p class="q">A regional coffee chain develops a proprietary roasting process that customers love, generating $4 of value per bag over raw ingredient cost. A national competitor reverse-engineers a nearly identical process within six months. What happens to the chain's added value?</p>
+          <div class="kc-options" data-correct="1">
+            <button class="kc-opt">A. It stays at $4 per bag, since the value created hasn't changed</button>
+            <button class="kc-opt">B. It drops toward $0, even though the $4 of value creation may still exist</button>
+            <button class="kc-opt">C. It increases, because competition validates that the process is valuable</button>
+            <button class="kc-opt">D. It cannot be determined without knowing the cost of the new process</button>
+          </div>
+          <div class="kc-feedback"></div>
+          <button class="kc-retry">Try again</button>
+        </div>
+      </div>
+
+      <div class="footer-nav">
+        <a class="btn ghost" href="#welcome">&larr; Previous</a>
+        <a class="btn" href="#s2">Next: Two Ways to Create Value &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== SECTION 2 ===================== -->
+    <section class="section" id="s2">
+      <div class="section-kicker">Section 2 of 7</div>
+      <h2>Two Ways to Create New Value</h2>
+      <p class="dek">The two levers managers actually have, and the ground rules underneath both</p>
+
+      <div class="tabs" data-group="s2tabs">
+        <button class="tab-btn active" data-tab="s2-cwp">Increasing CWP</button>
+        <button class="tab-btn" data-tab="s2-soc">Decreasing SOC</button>
+        <button class="tab-btn" data-tab="s2-principles">Value Principles</button>
+        <button class="tab-btn" data-tab="s2-tool">Lever Simulator</button>
+        <button class="tab-btn" data-tab="s2-kc">Knowledge Check</button>
+      </div>
+
+      <div class="tab-panel active" data-panel="s2-cwp">
+        <h3 class="sub" style="margin-top:0;">Raise Customer Willingness to Pay</h3>
+        <p>The first lever works on the customer side of the transaction. The strategy: drive CWP as high as you possibly can, then price low enough that customers feel like they're capturing significant value when they buy &mdash; so they buy in volume (Jobs, 2010).</p>
+        <div class="icon-card">
+          <div class="ic">&#128241;</div>
+          <h4>The 2010 iPad</h4>
+          <p>Apple priced the original iPad well below what analysts expected, even though willingness to pay was sky-high. The perceived gap between value and price &mdash; not the price itself &mdash; is what drove adoption at scale.</p>
+        </div>
+        <div class="callout tip">
+          <b class="tag">&#128188; Manager lens</b>
+          This is a balancing act, not a maximization problem. Maximize price and you maximize margin per unit &mdash; and kill volume.
+        </div>
+      </div>
+
+      <div class="tab-panel" data-panel="s2-soc">
+        <h3 class="sub" style="margin-top:0;">Lower Supplier Opportunity Cost</h3>
+        <p>The second lever works on the supplier side: lower what it costs your suppliers to do business with you, and capture part of that savings as added value.</p>
+        <div class="icon-card">
+          <div class="ic">&#128230;</div>
+          <h4>Walmart's Continuous Replenishment</h4>
+          <p>By integrating directly with supplier inventory systems, Walmart lowers suppliers' own cost of doing business with them &mdash; and captures some of that savings rather than leaving it on the table.</p>
+        </div>
+        <div class="callout tip">
+          <b class="tag">&#128188; Manager lens</b>
+          Same value-creation logic, opposite direction. CWP pulls value from the customer side; SOC pushes efficiency into the supplier side.
+        </div>
+      </div>
+
+      <div class="tab-panel" data-panel="s2-principles">
+        <h3 class="sub" style="margin-top:0;">Four Ground Rules</h3>
+        <ul class="learn-list">
+          <li><span class="diamond">&#9670;</span> <strong>Value is in the eye of the customer</strong> &mdash; not in your cost structure, not in your effort.</li>
+          <li><span class="diamond">&#9670;</span> <strong>CWP is not the same as price</strong> &mdash; willingness to pay is a ceiling; price is a choice you make below it.</li>
+          <li><span class="diamond">&#9670;</span> <strong>Value can be tangible or intangible</strong> &mdash; brand trust, convenience, and status are real value with no physical component.</li>
+          <li><span class="diamond">&#9670;</span> <strong>Creation of value is not the same as appropriation</strong> &mdash; you can create enormous value and capture none of it.</li>
+        </ul>
+        <div class="callout key">
+          <b class="tag">&#9989; Value vs. appropriation</b>
+          Competitive advantage and added value are nearly the same question asked two ways. Firms must actively defend their share of value created, or competitors &mdash; and customers, and suppliers &mdash; will capture it instead. Protect appropriation, not just creation.
+        </div>
+      </div>
+
+      <div class="tab-panel" data-panel="s2-tool">
+        <div class="tool">
+          <h4>&#128736; The Value Lever Simulator</h4>
+          <div class="tool-sub">Move each lever to see how it shifts value created vs. what a firm can actually capture. Illustrative, not a precise pricing model.</div>
+          <div class="slider-row">
+            <label>Increase in Customer Willingness to Pay <span class="val" id="cwpVal">20%</span></label>
+            <input type="range" id="cwpSlider" min="0" max="50" value="20">
+          </div>
+          <div class="slider-row">
+            <label>Decrease in Supplier Opportunity Cost <span class="val" id="socVal">10%</span></label>
+            <input type="range" id="socSlider" min="0" max="50" value="10">
+          </div>
+          <div class="tool-output">
+            <div class="out-card"><div class="out-num" id="dominantLever">CWP</div><div class="out-lbl">Dominant Lever</div></div>
+            <div class="out-card"><div class="out-num" id="totalLift">30%</div><div class="out-lbl">Total Value Lift</div></div>
+            <div class="out-card"><div class="out-num" id="capturedShare">$130</div><div class="out-lbl">Est. New Value (per $100 base)</div></div>
+          </div>
+          <div class="tool-note">Simplified additive model for teaching purposes: new value &asymp; baseline &times; (1 + CWP% + SOC%). Real pricing dynamics are nonlinear.</div>
+        </div>
+      </div>
+
+      <div class="tab-panel" data-panel="s2-kc">
+        <div class="kc">
+          <span class="kc-label">Knowledge Check 2</span>
+          <p class="q">A SaaS company wants to create more value without raising prices. Which action is an example of decreasing SOC rather than increasing CWP?</p>
+          <div class="kc-options" data-correct="1">
+            <button class="kc-opt">A. Adding a feature customers have been requesting</button>
+            <button class="kc-opt">B. Negotiating an API integration that cuts a key data-provider's cost to serve them</button>
+            <button class="kc-opt">C. Running a marketing campaign highlighting product benefits</button>
+            <button class="kc-opt">D. Offering a free trial extension</button>
+          </div>
+          <div class="kc-feedback"></div>
+          <button class="kc-retry">Try again</button>
+        </div>
+      </div>
+
+      <div class="footer-nav">
+        <a class="btn ghost" href="#s1">&larr; Previous</a>
+        <a class="btn" href="#s3">Next: Strategic vs. Tactical IS &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== SECTION 3 ===================== -->
+    <section class="section" id="s3">
+      <div class="section-kicker">Section 3 of 7</div>
+      <h2>Strategic vs. Tactical IS</h2>
+      <p class="dek">Most systems in your organization are not strategic. Here's the test that tells you which ones are.</p>
+
+      <div class="tabs" data-group="s3tabs">
+        <button class="tab-btn active" data-tab="s3-strat">Strategic IS</button>
+        <button class="tab-btn" data-tab="s3-tact">Tactical IS</button>
+        <button class="tab-btn" data-tab="s3-itdsi">IT-Dependent Initiatives</button>
+        <button class="tab-btn" data-tab="s3-compare">Comparison</button>
+        <button class="tab-btn" data-tab="s3-kc">Knowledge Check</button>
+      </div>
+
+      <div class="tab-panel active" data-panel="s3-strat">
+        <p>Strategic information systems are <strong>not</strong> defined by their functionality or the organizational function they support. They're defined by their objectives and the purpose they serve. The same piece of software can be tactical in one firm and strategic in another, depending on what it's used to accomplish.</p>
+        <div class="callout key">
+          <b class="tag">&#128273; The test</b>
+          A strategic IS positions the firm to capture value that rivals can't easily replicate &mdash; an IT-dependent activity system competitors can't easily copy. Hold every &ldquo;strategic&rdquo; claim to that bar.
+        </div>
+      </div>
+
+      <div class="tab-panel" data-panel="s3-tact">
+        <p>Tactical information systems don't position the firm to create added value &mdash; but they're still crucial, often mission-critical, for operations. No modern organization runs without ERP, CRM, supply chain systems, e-mail, or basic productivity software.</p>
+        <div class="callout warn">
+          <b class="tag">&#9888; The budget trap</b>
+          Implementing or upgrading tactical systems will not create competitive advantage. You need them. They will not differentiate you. Don't confuse &ldquo;necessary&rdquo; with &ldquo;strategic.&rdquo;
+        </div>
+      </div>
+
+      <div class="tab-panel" data-panel="s3-itdsi">
+        <p>IT-dependent strategic initiatives are not simply a piece of software, a digital device, or a program that might generate an advantage until someone copies it. They're a configuration of an entire activity system &mdash; people, process, and technology together &mdash; dependent on IT at its core, built specifically to create and appropriate economic value.</p>
+        <div class="callout tip">
+          <b class="tag">&#128188; Manager lens</b>
+          The test isn't &ldquo;is the technology innovative.&rdquo; The test is: does it create added value? IT investments only pay off when they're part of a larger, cohesive system design &mdash; not as a standalone purchase.
+        </div>
+      </div>
+
+      <div class="tab-panel" data-panel="s3-compare">
+        <table class="data">
+          <tr><th></th><th>Strategic IS</th><th>Tactical IS</th><th>IT-Dependent Initiative</th></tr>
+          <tr><td><strong>Defined by</strong></td><td>Objective &amp; purpose</td><td>Function performed</td><td>The whole activity system</td></tr>
+          <tr><td><strong>Examples</strong></td><td>Hard to copy by design</td><td>ERP, CRM, email</td><td>People + process + IT, built for value</td></tr>
+          <tr><td><strong>Creates added value?</strong></td><td>Yes, if it works</td><td>Rarely on its own</td><td>That's the entire goal</td></tr>
+          <tr><td><strong>Risk if removed</strong></td><td>Lose competitive edge</td><td>Operations stall</td><td>Lose the value-creation engine</td></tr>
+        </table>
+      </div>
+
+      <div class="tab-panel" data-panel="s3-kc">
+        <div class="kc">
+          <span class="kc-label">Knowledge Check 3</span>
+          <p class="q">Your firm's email system, ERP, and CRM are all functioning well and considered indispensable. A consultant calls them &ldquo;strategic assets.&rdquo; Using this module's definitions, what's the most accurate response?</p>
+          <div class="kc-options" data-correct="1">
+            <button class="kc-opt">A. Agree &mdash; anything indispensable to operations is strategic</button>
+            <button class="kc-opt">B. Disagree &mdash; these are tactical; necessary for operations, but they don't by themselves create added value the firm can defend</button>
+            <button class="kc-opt">C. Disagree &mdash; only custom-built software can ever be strategic</button>
+            <button class="kc-opt">D. Agree, but only because they are expensive</button>
+          </div>
+          <div class="kc-feedback"></div>
+          <button class="kc-retry">Try again</button>
+        </div>
+      </div>
+
+      <div class="footer-nav">
+        <a class="btn ghost" href="#s2">&larr; Previous</a>
+        <a class="btn" href="#s4">Next: Five Forces &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== SECTION 4 ===================== -->
+    <section class="section" id="s4">
+      <div class="section-kicker">Section 4 of 7</div>
+      <h2>Five Forces &mdash; A Digital Value Lens</h2>
+      <p class="dek">Porter's framework, asked one new question: where can IT change the answer?</p>
+
+      <div class="tabs" data-group="s4tabs">
+        <button class="tab-btn active" data-tab="s4-forces">The Five Forces</button>
+        <button class="tab-btn" data-tab="s4-rivalry">Rivalry Deep-Dive</button>
+        <button class="tab-btn" data-tab="s4-tool">Force Explorer</button>
+        <button class="tab-btn" data-tab="s4-kc">Knowledge Check</button>
+      </div>
+
+      <div class="tab-panel active" data-panel="s4-forces">
+        <p>Industry analysis using Porter's five forces framework (Porter, 1980) lets managers ask one question, five different ways: can the use of IT change this force in our favor?</p>
+        <div class="grid cols-2">
+          <div class="icon-card">
+            <div class="ic">&#128679;</div>
+            <h4>Threat of New Entrants</h4>
+            <div class="tagline">Raise the barrier</div>
+            <p>Can IT create or increase barriers to entry? Strong IT infrastructure can make it costlier for new rivals to compete.</p>
+          </div>
+          <div class="icon-card">
+            <div class="ic">&#128257;</div>
+            <h4>Threat of Substitutes</h4>
+            <div class="tagline">Lock in unique value</div>
+            <p>Can IT reduce the appeal or use of substitute products or services? Locking in unique value lowers the threat.</p>
+          </div>
+          <div class="icon-card">
+            <div class="ic">&#128722;</div>
+            <h4>Bargaining Power of Buyers</h4>
+            <div class="tagline">Reduce buyer leverage</div>
+            <p>Can IT decrease buyers' bargaining power? Switching costs and personalization both reduce buyer leverage.</p>
+          </div>
+          <div class="icon-card">
+            <div class="ic">&#127981;</div>
+            <h4>Bargaining Power of Suppliers</h4>
+            <div class="tagline">Widen sourcing options</div>
+            <p>Can IT decrease suppliers' bargaining power? Integrated procurement systems widen sourcing options and shift leverage back to you.</p>
+          </div>
+        </div>
+        <div class="callout key">
+          <b class="tag">&#128273; Manager insight</b>
+          Industry analysis helps managers decide whether to enter an industry &mdash; and how to increase its appeal once they're already in it.
+        </div>
+      </div>
+
+      <div class="tab-panel" data-panel="s4-rivalry">
+        <p>The fifth force gets its own tab because it's the one most directly about IT-enabled competition: can IT change the basis of competition itself?</p>
+        <div class="grid cols-4">
+          <div class="icon-card"><div class="ic">&#128176;</div><h4>Cost Leadership</h4><p>IT can lower your costs faster than rivals can match.</p></div>
+          <div class="icon-card"><div class="ic">&#10024;</div><h4>Differentiation</h4><p>Superior IT-enabled service or experience becomes a moat.</p></div>
+          <div class="icon-card"><div class="ic">&#128274;</div><h4>Switching Costs</h4><p>Lock-in raises the cost of a customer leaving for a competitor.</p></div>
+          <div class="icon-card"><div class="ic">&#9889;</div><h4>Speed to Market</h4><p>Faster IT-enabled innovation cycles outpace analog-speed rivals.</p></div>
+        </div>
+      </div>
+
+      <div class="tab-panel" data-panel="s4-tool">
+        <div class="tool">
+          <h4>&#128736; Five Forces IT-Impact Explorer</h4>
+          <div class="tool-sub">Select a force to see how IT typically shifts it &mdash; and the manager question to ask.</div>
+          <div class="pill-group" id="forcePills">
+            <button class="pill-btn active" data-force="entrants">New Entrants</button>
+            <button class="pill-btn" data-force="substitutes">Substitutes</button>
+            <button class="pill-btn" data-force="buyers">Buyer Power</button>
+            <button class="pill-btn" data-force="suppliers">Supplier Power</button>
+            <button class="pill-btn" data-force="rivalry">Rivalry</button>
+          </div>
+          <div class="explorer-panel" id="forcePanel"></div>
+        </div>
+      </div>
+
+      <div class="tab-panel" data-panel="s4-kc">
+        <div class="kc">
+          <span class="kc-label">Knowledge Check 4</span>
+          <p class="q">An airline builds a mobile app with seamless rebooking, saved preferences, and a loyalty program that's painful to replicate elsewhere. Which force is this primarily addressing?</p>
+          <div class="kc-options" data-correct="1">
+            <button class="kc-opt">A. Threat of new entrants</button>
+            <button class="kc-opt">B. Bargaining power of buyers &mdash; switching costs lock customers in</button>
+            <button class="kc-opt">C. Bargaining power of suppliers</button>
+            <button class="kc-opt">D. Threat of substitutes</button>
+          </div>
+          <div class="kc-feedback"></div>
+          <button class="kc-retry">Try again</button>
+        </div>
+      </div>
+
+      <div class="footer-nav">
+        <a class="btn ghost" href="#s3">&larr; Previous</a>
+        <a class="btn" href="#s5">Next: Value Chain &amp; Network &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== SECTION 5 ===================== -->
+    <section class="section" id="s5">
+      <div class="section-kicker">Section 5 of 7</div>
+      <h2>Value Chain, Value Network &amp; CSLC</h2>
+      <p class="dek">Three lenses for finding exactly where value is created, exchanged, and delivered</p>
+
+      <div class="tabs" data-group="s5tabs">
+        <button class="tab-btn active" data-tab="s5-vc">Value Chain</button>
+        <button class="tab-btn" data-tab="s5-vn">Value Network</button>
+        <button class="tab-btn" data-tab="s5-cslc">CSLC</button>
+        <button class="tab-btn" data-tab="s5-compare">Comparison</button>
+        <button class="tab-btn" data-tab="s5-kc">Knowledge Check</button>
+      </div>
+
+      <div class="tab-panel active" data-panel="s5-vc">
+        <p>Managers use value chain analysis to outperform competitors by using IS to create added value and competitive advantage.</p>
+        <div class="grid cols-2">
+          <div class="icon-card">
+            <div class="ic">&#128176;</div>
+            <h4>Primary Activities</h4>
+            <div class="tagline">Revenue generators</div>
+            <p>The firm's actions directly related to value creation.</p>
+          </div>
+          <div class="icon-card">
+            <div class="ic">&#128736;</div>
+            <h4>Support Activities</h4>
+            <div class="tagline">Cost centers</div>
+            <p>Not directly tied to value creation, but necessary to enable it.</p>
+          </div>
+        </div>
+        <div class="callout tip">
+          <b class="tag">&#128188; Manager's goal</b>
+          Use IS to add value at each link in the chain &mdash; not just one. <strong>Advantage:</strong> maps value creation step by step. <strong>Disadvantage:</strong> treats the firm in isolation.
+        </div>
+      </div>
+
+      <div class="tab-panel" data-panel="s5-vn">
+        <p>The firm's own value chain doesn't exist in isolation &mdash; it sits inside a larger network that includes suppliers upstream and customers downstream.</p>
+        <p>The points of contact between these separate value chains are called <strong>linkages</strong>, and they're prime spots to deploy IT-dependent strategic initiatives &mdash; because that's where one firm's output becomes another firm's input.</p>
+        <div class="callout warn">
+          <b class="tag">&#9888; Be careful</b>
+          Never apply this model &ldquo;as is.&rdquo; Adapt it to your firm and industry using your in-depth knowledge of that business &mdash; the textbook example is a lodging stay; yours will look different.
+        </div>
+      </div>
+
+      <div class="tab-panel" data-panel="s5-cslc">
+        <p>The idea that a firm can use IS to create value through superior customer service has gotten new energy from the internet and from connected devices as viable business tools.</p>
+        <p>As more organizations build direct relationships with customers, the potential for new value creation at the &ldquo;front of the house&rdquo; &mdash; the point of direct customer contact &mdash; has grown substantially.</p>
+        <div class="callout key">
+          <b class="tag">&#128273; The question CSLC asks</b>
+          Where, in the customer's actual experience with us, can IT create value they'll notice and pay for?
+        </div>
+      </div>
+
+      <div class="tab-panel" data-panel="s5-compare">
+        <table class="data">
+          <tr><th></th><th>Value Chain</th><th>Value Network</th><th>CSLC</th></tr>
+          <tr><td><strong>Best for</strong></td><td>Mapping internal activities</td><td>Finding cross-firm opportunities</td><td>Customer-facing value</td></tr>
+          <tr><td><strong>Key question</strong></td><td>Where do we add value?</td><td>Where do chains connect?</td><td>Where does service create value?</td></tr>
+          <tr><td><strong>Risk</strong></td><td>Treats firm in isolation</td><td>Applying it &ldquo;as is&rdquo;</td><td>Needs direct customer contact</td></tr>
+        </table>
+      </div>
+
+      <div class="tab-panel" data-panel="s5-kc">
+        <div class="kc">
+          <span class="kc-label">Knowledge Check 5</span>
+          <p class="q">A hotel chain notices that guests who use a mobile check-in kiosk &mdash; a touchpoint shared with its booking-platform partners &mdash; report the highest satisfaction. Which concept best explains why this touchpoint is a strategic priority?</p>
+          <div class="kc-options" data-correct="1">
+            <button class="kc-opt">A. It's a primary activity in the value chain</button>
+            <button class="kc-opt">B. It's a linkage in the value network &mdash; a point of contact between separate value chains</button>
+            <button class="kc-opt">C. It's a support activity</button>
+            <button class="kc-opt">D. It's an example of the hierarchical perspective</button>
+          </div>
+          <div class="kc-feedback"></div>
+          <button class="kc-retry">Try again</button>
+        </div>
+      </div>
+
+      <div class="footer-nav">
+        <a class="btn ghost" href="#s4">&larr; Previous</a>
+        <a class="btn" href="#s6">Next: Virtual Value Chain &amp; Matrix &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== SECTION 6 ===================== -->
+    <section class="section" id="s6">
+      <div class="section-kicker">Section 6 of 7</div>
+      <h2>The Virtual Value Chain &amp; The Value Matrix</h2>
+      <p class="dek">Treating information itself as a value-creating resource &mdash; and combining it with the physical value chain</p>
+
+      <div class="tabs" data-group="s6tabs">
+        <button class="tab-btn active" data-tab="s6-vvc">VVC Steps</button>
+        <button class="tab-btn" data-tab="s6-matrix">The Value Matrix</button>
+        <button class="tab-btn" data-tab="s6-apply">Applying the Matrix</button>
+        <button class="tab-btn" data-tab="s6-tool">Matrix Builder</button>
+        <button class="tab-btn" data-tab="s6-kc">Knowledge Check</button>
+      </div>
+
+      <div class="tab-panel active" data-panel="s6-vvc">
+        <p>Information is no longer just a support resource for the physical value chain &mdash; it can itself be treated as an input of a productive transformation process. Information is no longer just a record of what happened. It's a raw material.</p>
+        <div class="grid cols-2">
+          <div class="icon-card"><div class="ic">&#128202;</div><h4>1. Gather</h4><p>Collect raw data from operations, transactions, and customer touchpoints across the firm.</p></div>
+          <div class="icon-card"><div class="ic">&#128193;</div><h4>2. Organize</h4><p>Classify and structure that raw data into categories ready for analysis.</p></div>
+          <div class="icon-card"><div class="ic">&#127919;</div><h4>3. Select</h4><p>Filter for the data most relevant to the question or opportunity in front of you.</p></div>
+          <div class="icon-card"><div class="ic">&#129504;</div><h4>4. Synthesize</h4><p>Combine and analyze the selected data to uncover patterns and new insights.</p></div>
+        </div>
+        <div class="icon-card" style="margin-top:14px;"><div class="ic">&#128640;</div><h4>5. Distribute</h4><p>Deliver those insights, new processes, products, or services to the people who need them.</p></div>
+      </div>
+
+      <div class="tab-panel" data-panel="s6-matrix">
+        <p>By combining the physical value chain and the virtual value chain, GMs and FMs get a cohesive framework for seeking and exploiting opportunities for IT-dependent strategic initiatives.</p>
+        <table class="data">
+          <tr><th>Layer</th><th>You Own</th><th>Example</th></tr>
+          <tr><td><strong>Physical</strong></td><td>Activities directly tied to value creation</td><td>Inbound logistics, operations, outbound logistics</td></tr>
+          <tr><td><strong>Virtual</strong></td><td>The five-step information transformation</td><td>Gather &rarr; Organize &rarr; Select &rarr; Synthesize &rarr; Distribute</td></tr>
+          <tr><td><strong>Matrix</strong></td><td>A cohesive view of where to deploy IT</td><td>VVC steps applied to each physical-chain activity</td></tr>
+        </table>
+      </div>
+
+      <div class="tab-panel" data-panel="s6-apply">
+        <div class="grid cols-2">
+          <div class="icon-card"><div class="ic">&#128203;</div><h4>Mind the Five Steps</h4><p>Apply gather, organize, select, synthesize, and distribute to data generated throughout the physical value chain &mdash; every activity, not just the obvious ones.</p></div>
+          <div class="icon-card"><div class="ic">&#128142;</div><h4>Uncover New Value</h4><p>Look for moments where information itself becomes the product, not just a record of one.</p></div>
+          <div class="icon-card"><div class="ic">&#9999;</div><h4>Adapt, Don't Adopt</h4><p>Never apply the matrix as-is. Tailor it to your firm's specific industry and value chain.</p></div>
+          <div class="icon-card"><div class="ic">&#127919;</div><h4>Target IT Investment</h4><p>Use the combined view to find where IT-dependent initiatives create the most added value.</p></div>
+        </div>
+        <div class="callout key">
+          <b class="tag">&#128273; Manager insight</b>
+          By being mindful of the five steps of the VVC as they apply to data generated throughout the physical value chain, managers can uncover opportunities for new value creation and appropriation.
+        </div>
+      </div>
+
+      <div class="tab-panel" data-panel="s6-tool">
+        <div class="tool">
+          <h4>&#128736; Value Matrix Builder</h4>
+          <div class="tool-sub">Pick a physical value-chain activity and a virtual value chain step to generate an example opportunity.</div>
+          <div class="matrix-builder-row">
+            <div class="matrix-builder-col">
+              <h5>Physical Activity</h5>
+              <div class="pill-group" id="mbActivity">
+                <button class="pill-btn active" data-act="inbound">Inbound Logistics</button>
+                <button class="pill-btn" data-act="ops">Operations</button>
+                <button class="pill-btn" data-act="outbound">Outbound Logistics</button>
+                <button class="pill-btn" data-act="marketing">Marketing &amp; Sales</button>
+                <button class="pill-btn" data-act="service">Service</button>
+              </div>
+            </div>
+            <div class="matrix-builder-col">
+              <h5>Virtual Value Chain Step</h5>
+              <div class="pill-group" id="mbStep">
+                <button class="pill-btn active" data-step="gather">Gather</button>
+                <button class="pill-btn" data-step="organize">Organize</button>
+                <button class="pill-btn" data-step="select">Select</button>
+                <button class="pill-btn" data-step="synthesize">Synthesize</button>
+                <button class="pill-btn" data-step="distribute">Distribute</button>
+              </div>
+            </div>
+          </div>
+          <div class="mb-output" id="mbOutput"></div>
+        </div>
+      </div>
+
+      <div class="tab-panel" data-panel="s6-kc">
+        <div class="kc">
+          <span class="kc-label">Knowledge Check 6</span>
+          <p class="q">A retailer's inbound logistics team already collects detailed data on supplier delivery times. Applying the value matrix, what's the most strategic next step?</p>
+          <div class="kc-options" data-correct="1">
+            <button class="kc-opt">A. Stop collecting the data since logistics isn't customer-facing</button>
+            <button class="kc-opt">B. Apply the virtual value chain steps (gather &rarr; organize &rarr; select &rarr; synthesize &rarr; distribute) to turn that data into a supplier risk-scoring tool other teams can use</button>
+            <button class="kc-opt">C. Outsource logistics entirely</button>
+            <button class="kc-opt">D. Wait until the data volume is larger before doing anything</button>
+          </div>
+          <div class="kc-feedback"></div>
+          <button class="kc-retry">Try again</button>
+        </div>
+      </div>
+
+      <div class="footer-nav">
+        <a class="btn ghost" href="#s5">&larr; Previous</a>
+        <a class="btn" href="#s7">Next: Synthesis &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== SECTION 7 / SYNTHESIS ===================== -->
+    <section class="section" id="s7">
+      <div class="section-kicker">Section 7 of 7 &middot; Synthesis</div>
+      <h2>Key Takeaways &amp; Self-Assessment</h2>
+      <p class="dek">Five principles that should change how you approach IS decisions as a manager</p>
+
+      <div class="tabs" data-group="s7tabs">
+        <button class="tab-btn active" data-tab="s7-principles">Five Principles</button>
+        <button class="tab-btn" data-tab="s7-assess">Self-Assessment</button>
+        <button class="tab-btn" data-tab="s7-assign">Week 2 Assignment</button>
+      </div>
+
+      <div class="tab-panel active" data-panel="s7-principles">
+        <div class="callout key">
+          <b class="tag">&#128273; Your diagnostic toolkit</b>
+          Any value-creation question you face in your career &mdash; whether you're the manager, the sponsor, or the subject matter expert &mdash; can be analyzed through one or more of these five lenses.
+        </div>
+
+        <div class="principle">
+          <div class="pnum">01</div>
+          <div><h4>Value does not equal revenue</h4>
+          <p>Value creation is a transformation; added value is what would be lost if the firm exited the exchange. Only added value can be appropriated as profit. Revenue can grow while added value shrinks &mdash; watch for that.</p></div>
+        </div>
+        <div class="principle">
+          <div class="pnum">02</div>
+          <div><h4>Strategic does not equal necessary</h4>
+          <p>ERP, CRM, and e-mail are vital, but tactical. Strategic IS is defined by its ability to create added value, not by its functionality. Don't let a vendor's feature list convince you something is strategic.</p></div>
+        </div>
+        <div class="principle">
+          <div class="pnum">03</div>
+          <div><h4>The five forces reframe competition</h4>
+          <p>IT can raise entry barriers, blunt substitutes, and shift bargaining power &mdash; the same five forces you may already know, seen through a digital lens.</p></div>
+        </div>
+        <div class="principle">
+          <div class="pnum">04</div>
+          <div><h4>Linkages are where value hides</h4>
+          <p>The points of contact between a firm's value chain and its suppliers and customers are prime spots for IT-dependent strategic initiatives. Look at the seams, not just the departments.</p></div>
+        </div>
+        <div class="principle">
+          <div class="pnum">05</div>
+          <div><h4>Data is itself a resource</h4>
+          <p>The virtual value chain treats information as an input, not just a record. Gather, organize, select, synthesize, and distribute to create new value.</p></div>
+        </div>
+      </div>
+
+      <div class="tab-panel" data-panel="s7-assess">
+        <p>Rate your confidence in each area covered this week. This is for your own reflection &mdash; it will not be submitted.</p>
+        <div id="assessRows">
+          <div class="assess-row"><span class="a-label">Value vs. Added Value</span><input type="range" min="1" max="10" value="5" data-assess><span class="a-val">5</span></div>
+          <div class="assess-row"><span class="a-label">CWP &amp; SOC Levers</span><input type="range" min="1" max="10" value="5" data-assess><span class="a-val">5</span></div>
+          <div class="assess-row"><span class="a-label">Strategic vs. Tactical IS</span><input type="range" min="1" max="10" value="5" data-assess><span class="a-val">5</span></div>
+          <div class="assess-row"><span class="a-label">Five Forces, Digital Lens</span><input type="range" min="1" max="10" value="5" data-assess><span class="a-val">5</span></div>
+          <div class="assess-row"><span class="a-label">Value Chain &amp; Network</span><input type="range" min="1" max="10" value="5" data-assess><span class="a-val">5</span></div>
+          <div class="assess-row"><span class="a-label">Virtual Value Chain &amp; Matrix</span><input type="range" min="1" max="10" value="5" data-assess><span class="a-val">5</span></div>
+        </div>
+        <div class="assess-result" id="assessResult">Rate all six areas to see your value-creation fluency profile.</div>
+      </div>
+
+      <div class="tab-panel" data-panel="s7-assign">
+        <div class="assignment-box">
+          <h4>Weekly Discussion &mdash; Due Before Week 3</h4>
+          <div class="prompt">Identify one IT-dependent initiative at your current organization (or a previous one). In one paragraph, answer: Does it create added value, or is it a tactical system dressed up as strategic? Which framework from this module &mdash; five forces, value chain, value network, CSLC, or the value matrix &mdash; best supports your answer?</div>
+          <h4 style="margin-top:0;">Grading Criteria</h4>
+          <ul>
+            <li><strong>Specific initiative identified</strong> &mdash; not &ldquo;our CRM&rdquo; but the actual system, team, and use case</li>
+            <li><strong>Strategic/tactical test correctly applied</strong> &mdash; use this module's definitions, not informal usage of the terms</li>
+            <li><strong>Framework explicitly used as evidence</strong> &mdash; name the framework and apply it, don't just reference it</li>
+            <li><strong>Trade-offs acknowledged</strong> &mdash; every framework has advantages and disadvantages; note at least one</li>
+          </ul>
+        </div>
+        <div class="callout key">
+          <b class="tag">&#128273; Reminder &mdash; Week 2 deliverables</b>
+          1. Group Activity 1 &mdash; only one member submits on behalf of the group &middot;
+          2. Weekly Discussion on Canvas &middot;
+          3. Week 2 Reading: value creation, strategic IS &amp; the value matrix &middot;
+          4. Teams Access Shortcut &mdash; confirm your group channel
+        </div>
+      </div>
+
+      <div class="footer-nav">
+        <a class="btn ghost" href="#s6">&larr; Previous</a>
+        <span></span>
+      </div>
+    </section>
+
+    <div class="module-end">
+      <h2>You've completed Week 2</h2>
+      <p style="color:var(--slate); max-width:60ch; margin:10px auto 26px;">Nice work. You now have a ten-point diagnostic toolkit across two weeks for any information systems question you'll face as a manager.</p>
+      <button class="btn" id="completeBtn">Complete Module &#10003;</button>
+    </div>
+
+  </main>
+</div>
+
+<script>
+(function(){
+  /* ---------------- Tabs ---------------- */
+  document.querySelectorAll('.tabs').forEach(function(tabGroup){
+    var buttons = tabGroup.querySelectorAll('.tab-btn');
+    var section = tabGroup.closest('.section');
+    buttons.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        buttons.forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        var target = btn.getAttribute('data-tab');
+        section.querySelectorAll('.tab-panel').forEach(function(p){
+          p.classList.toggle('active', p.getAttribute('data-panel') === target);
+        });
+      });
+    });
+  });
+
+  /* ---------------- Knowledge checks ---------------- */
+  document.querySelectorAll('.kc').forEach(function(kc){
+    var optsWrap = kc.querySelector('.kc-options');
+    var correctIdx = parseInt(optsWrap.getAttribute('data-correct'), 10);
+    var opts = optsWrap.querySelectorAll('.kc-opt');
+    var feedback = kc.querySelector('.kc-feedback');
+    var retry = kc.querySelector('.kc-retry');
+
+    var correctMsgs = {
+    };
+
+    opts.forEach(function(opt, idx){
+      opt.addEventListener('click', function(){
+        opts.forEach(function(o){ o.setAttribute('disabled','disabled'); });
+        if(idx === correctIdx){
+          opt.classList.add('selected-correct');
+          feedback.className = 'kc-feedback show correct';
+          feedback.innerHTML = '&#9989; <strong>Correct.</strong> ' + (kc.getAttribute('data-explain-correct') || optsWrap.getAttribute('data-explain-correct') || '');
+          retry.classList.remove('show');
+        } else {
+          opt.classList.add('selected-incorrect');
+          feedback.className = 'kc-feedback show incorrect';
+          feedback.innerHTML = '&#10060; <strong>Not quite.</strong> ' + (optsWrap.getAttribute('data-explain-incorrect') || 'Review the section above, then give it another try.');
+          retry.classList.add('show');
+        }
+      });
+    });
+
+    retry.addEventListener('click', function(){
+      opts.forEach(function(o){
+        o.removeAttribute('disabled');
+        o.classList.remove('selected-correct','selected-incorrect');
+      });
+      feedback.classList.remove('show');
+      retry.classList.remove('show');
+    });
+  });
+
+  /* explanations per knowledge check, keyed by order on page */
+  var explanations = [
+    {correct:"Value creation ($4/bag) and added value are different measures. Once a competitor can replicate the process, customers have an alternative \u2014 so the chain's ability to capture that $4 collapses toward zero, even though the value itself still exists in the market.",
+     incorrect:"Remember: value creation and added value are different measures. Ask what would be lost if this firm exited the exchange \u2014 once a rival can replicate the process, the answer changes."},
+    {correct:"Negotiating a cheaper API integration for a supplier lowers that supplier's opportunity cost of serving you \u2014 the definition of decreasing SOC. The other options all aim to raise customer willingness to pay instead.",
+     incorrect:"Look for the option that changes what it costs a supplier to do business with the firm, not what a customer perceives or wants."},
+    {correct:"ERP, CRM, and e-mail are necessary for operations but, by this module's test, tactical: they don't by themselves create added value the firm can defend from competitors. \u201cIndispensable\u201d and \u201cstrategic\u201d are not the same claim.",
+     incorrect:"Apply the test directly: does this system position the firm to capture value rivals can't easily replicate? If not, it's tactical \u2014 no matter how indispensable it is."},
+    {correct:"Saved preferences and a loyalty program raise the cost of a customer switching to a competitor \u2014 that's a buyer-power play, specifically a switching-cost mechanism.",
+     incorrect:"Think about who the initiative targets and what it makes harder for them to do. The app is aimed at customers, not at new competitors or suppliers."},
+    {correct:"A shared touchpoint between the hotel's value chain and its booking-platform partners' value chains is, by definition, a linkage in the value network \u2014 exactly where IT-dependent strategic initiatives tend to pay off.",
+     incorrect:"Ask whether this touchpoint sits inside one firm's value chain, or at the seam between two separate firms' value chains. The latter is a linkage."},
+    {correct:"This is exactly what the virtual value chain is for: take data already being gathered and run it through organize \u2192 select \u2192 synthesize \u2192 distribute to turn it into a new, shareable value-creating resource, rather than letting it sit unused.",
+     incorrect:"The data already exists and is valuable \u2014 the strategic move is applying the remaining VVC steps to it, not discarding it or waiting."}
+  ];
+  document.querySelectorAll('.kc-options').forEach(function(opts, i){
+    if(explanations[i]){
+      opts.setAttribute('data-explain-correct', explanations[i].correct);
+      opts.setAttribute('data-explain-incorrect', explanations[i].incorrect);
+    }
+  });
+
+  /* ---------------- Section 2 tool: Value Lever Simulator ---------------- */
+  var cwpSlider = document.getElementById('cwpSlider');
+  var socSlider = document.getElementById('socSlider');
+  function updateLeverTool(){
+    var cwp = parseInt(cwpSlider.value,10);
+    var soc = parseInt(socSlider.value,10);
+    document.getElementById('cwpVal').textContent = cwp + '%';
+    document.getElementById('socVal').textContent = soc + '%';
+    var dominant = cwp === soc ? 'Balanced' : (cwp > soc ? 'CWP' : 'SOC');
+    document.getElementById('dominantLever').textContent = dominant;
+    var total = cwp + soc;
+    document.getElementById('totalLift').textContent = total + '%';
+    var newValue = Math.round(100 * (1 + total/100));
+    document.getElementById('capturedShare').textContent = '$' + newValue;
+  }
+  if(cwpSlider){ cwpSlider.addEventListener('input', updateLeverTool); socSlider.addEventListener('input', updateLeverTool); updateLeverTool(); }
+
+  /* ---------------- Section 4 tool: Five Forces Explorer ---------------- */
+  var forceData = {
+    entrants: {
+      title: "Threat of New Entrants",
+      def: "How easily new competitors can enter the industry.",
+      lever: "Strong IT infrastructure and integrated systems raise the capital and expertise bar for newcomers.",
+      example: "A logistics firm's proprietary routing software takes years and significant investment for a new entrant to replicate.",
+      question: "Can the use of IT create or increase barriers to entry in our industry?"
+    },
+    substitutes: {
+      title: "Threat of Substitute Products",
+      def: "How easily customers can switch to a different kind of product or service that meets the same need.",
+      lever: "IT-enabled features that are hard to replicate elsewhere make substitutes less appealing.",
+      example: "A streaming service's recommendation engine makes a generic alternative feel like a downgrade, not just a substitute.",
+      question: "Can the use of IT reduce the appeal or use of substitute products or services?"
+    },
+    buyers: {
+      title: "Bargaining Power of Buyers",
+      def: "How much leverage customers have to demand lower prices or better terms.",
+      lever: "Switching costs and personalization both reduce how easily a buyer can walk away.",
+      example: "Saved preferences, loyalty data, and integrated workflows make leaving a platform costly for the customer.",
+      question: "Can the use of IT decrease buyers' bargaining power?"
+    },
+    suppliers: {
+      title: "Bargaining Power of Suppliers",
+      def: "How much leverage suppliers have to raise prices or reduce quality/availability.",
+      lever: "Integrated procurement systems widen sourcing options and shift leverage back to the firm.",
+      example: "A retailer's supplier portal lets it compare and switch vendors quickly, reducing any single supplier's pricing power.",
+      question: "Can the use of IT decrease suppliers' bargaining power?"
+    },
+    rivalry: {
+      title: "Rivalry Among Existing Competitors",
+      def: "How intensely firms already in the industry compete on price, features, and service.",
+      lever: "IT can shift the basis of competition itself \u2014 cost, differentiation, switching costs, or speed.",
+      example: "A firm that ships IT-enabled features twice as fast as rivals changes what customers expect from the entire category.",
+      question: "Can the use of IT change the basis of competition in our industry?"
+    }
+  };
+  var forcePills = document.getElementById('forcePills');
+  function renderForce(key){
+    var d = forceData[key];
+    document.getElementById('forcePanel').innerHTML =
+      '<div class="ep-row"><b>' + d.title + '</b></div>' +
+      '<div class="ep-row"><b>Definition:</b> ' + d.def + '</div>' +
+      '<div class="ep-row"><b>IT Lever:</b> ' + d.lever + '</div>' +
+      '<div class="ep-row"><b>Example:</b> ' + d.example + '</div>' +
+      '<div class="ep-row"><b>Manager Question:</b> ' + d.question + '</div>';
+  }
+  if(forcePills){
+    forcePills.querySelectorAll('.pill-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        forcePills.querySelectorAll('.pill-btn').forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        renderForce(btn.getAttribute('data-force'));
+      });
+    });
+    renderForce('entrants');
+  }
+
+  /* ---------------- Section 6 tool: Value Matrix Builder ---------------- */
+  var actLabels = {
+    inbound:"Inbound Logistics", ops:"Operations", outbound:"Outbound Logistics",
+    marketing:"Marketing &amp; Sales", service:"Service"
+  };
+  var actData = {
+    inbound:{ source:"supplier deliveries, receiving dock scans, and quality inspections" },
+    ops:{ source:"production line sensors, throughput counts, and downtime logs" },
+    outbound:{ source:"shipping manifests, delivery tracking, and warehouse pick times" },
+    marketing:{ source:"campaign engagement, website behavior, and lead source data" },
+    service:{ source:"support tickets, call transcripts, and customer satisfaction scores" }
+  };
+  var stepTemplates = {
+    gather: function(a){ return "Gather: collect raw data from " + actData[a].source + " before it's lost or overwritten."; },
+    organize: function(a){ return "Organize: structure the " + actLabels[a] + " data into consistent categories so it's ready for analysis across teams."; },
+    select: function(a){ return "Select: filter the " + actLabels[a] + " data down to the signals that actually relate to a specific decision \u2014 not everything that was collected."; },
+    synthesize: function(a){ return "Synthesize: combine the selected " + actLabels[a] + " data to surface a pattern \u2014 a bottleneck, a risk, or an opportunity \u2014 nobody could see in any single record."; },
+    distribute: function(a){ return "Distribute: deliver that " + actLabels[a] + " insight to the team or system that can act on it \u2014 turning the data into a decision, not just a dashboard."; }
+  };
+  var mbActivity = document.getElementById('mbActivity');
+  var mbStep = document.getElementById('mbStep');
+  function renderMatrixBuilder(){
+    var a = mbActivity.querySelector('.pill-btn.active').getAttribute('data-act');
+    var s = mbStep.querySelector('.pill-btn.active').getAttribute('data-step');
+    document.getElementById('mbOutput').innerHTML = stepTemplates[s](a);
+  }
+  if(mbActivity){
+    [mbActivity, mbStep].forEach(function(group){
+      group.querySelectorAll('.pill-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          group.querySelectorAll('.pill-btn').forEach(function(b){ b.classList.remove('active'); });
+          btn.classList.add('active');
+          renderMatrixBuilder();
+        });
+      });
+    });
+    renderMatrixBuilder();
+  }
+
+  /* ---------------- Self-assessment ---------------- */
+  var assessInputs = document.querySelectorAll('[data-assess]');
+  function updateAssessment(){
+    var total = 0;
+    assessInputs.forEach(function(inp){
+      inp.parentElement.querySelector('.a-val').textContent = inp.value;
+      total += parseInt(inp.value,10);
+    });
+    var avg = total / assessInputs.length;
+    var label;
+    if(avg < 4) label = "Building Foundations \u2014 revisit the tabs above before the discussion post.";
+    else if(avg < 7) label = "Solid Foundation \u2014 you can apply most frameworks with a quick refresher.";
+    else label = "Highly Fluent \u2014 you're ready to apply these frameworks to a real initiative.";
+    document.getElementById('assessResult').textContent =
+      "Average confidence: " + avg.toFixed(1) + "/10 \u2014 " + label;
+  }
+  assessInputs.forEach(function(inp){ inp.addEventListener('input', updateAssessment); });
+
+  /* ---------------- Complete button ---------------- */
+  var completeBtn = document.getElementById('completeBtn');
+  if(completeBtn){
+    completeBtn.addEventListener('click', function(){
+      completeBtn.textContent = 'Module Complete \u2713';
+      completeBtn.disabled = true;
+    });
+  }
+
+  /* ---------------- Scrollspy + progress ---------------- */
+  var navLinks = document.querySelectorAll('.nav-link');
+  var sectionIds = ['welcome','s1','s2','s3','s4','s5','s6','s7'];
+  var sectionEls = sectionIds.map(function(id){ return document.getElementById(id); });
+
+  function setActive(id){
+    navLinks.forEach(function(l){
+      l.classList.toggle('active', l.getAttribute('data-target') === id);
+    });
+    var idx = sectionIds.indexOf(id);
+    var pct = Math.round(((idx) / (sectionIds.length - 1)) * 100);
+    document.getElementById('topProgress').style.width = pct + '%';
+    document.getElementById('sideProgressFill').style.width = pct + '%';
+    document.getElementById('sideProgressPct').textContent = pct + '%';
+  }
+
+  var observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        setActive(entry.target.id);
+      }
+    });
+  }, { rootMargin: '-20% 0px -65% 0px', threshold: 0 });
+
+  sectionEls.forEach(function(el){ if(el) observer.observe(el); });
+  setActive('welcome');
+})();
+</script>
+
+</body>
+</html>
